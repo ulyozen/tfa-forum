@@ -3,7 +3,7 @@ using TFA.Domain.UseCases.GetForums;
 
 namespace TFA.Storage.Storages;
 
-public class GetForumStorage : IGetForumStorage
+internal class GetForumStorage : IGetForumStorage
 {
     private readonly ForumDbContext _forumDbContext;
 
