@@ -2,7 +2,7 @@ using FluentValidation;
 
 namespace TFA.Domain.UseCases.CreateTopic;
 
-public class CreateTopicCommandValidator : AbstractValidator<CreateTopicCommand>
+internal class CreateTopicCommandValidator : AbstractValidator<CreateTopicCommand>
 {
     public CreateTopicCommandValidator()
     {

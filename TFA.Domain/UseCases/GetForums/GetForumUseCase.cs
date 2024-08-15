@@ -2,7 +2,7 @@ using Forum = TFA.Domain.Models.Forum;
 
 namespace TFA.Domain.UseCases.GetForums;
 
-public class GetForumUseCase : IGetForumUseCase
+internal class GetForumUseCase : IGetForumUseCase
 {
     private readonly IGetForumStorage _storage;
 
