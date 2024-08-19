@@ -5,6 +5,7 @@ using TFA.Domain.Authorization;
 using TFA.Domain.Exceptions;
 using TFA.Domain.UseCases.CreateTopic;
 using TFA.Domain.UseCases.GetForums;
+using TFA.Domain.UseCases.GetTopics;
 using Topic = TFA.API.Models.Topic;
 
 namespace TFA.API.Controllers;
@@ -13,15 +14,11 @@ namespace TFA.API.Controllers;
 [Route("forums")]
 public class ForumController : ControllerBase
 {
-    /// <summary>
-    /// Get list of forums
-    /// </summary>
-    /// <param name="useCase"></param>
-    /// <param name="cancellationToken"></param>
-    /// <returns></returns>
     [HttpGet(Name = nameof(GetForums))]
     [ProducesResponseType(200, Type = typeof(ForumData[]))]
-    public async Task<IActionResult> GetForums([FromServices] IGetForumUseCase useCase, CancellationToken cancellationToken)
+    public async Task<IActionResult> GetForums(
+        [FromServices] IGetForumUseCase useCase, 
+        CancellationToken cancellationToken)
     {
         var response = await useCase.Execute(cancellationToken);
         return Ok(response.Select(f => new ForumData
@@ -48,7 +45,28 @@ public class ForumController : ControllerBase
             {
                 Id = topic.Id,
                 Title = topic.Title,
-                CreatedAt = topic.CreateAt
+                CreatedAt = topic.CreatedAt
             });
+    }
+    
+    [HttpGet("{forumId:guid}/topics")]
+    [ProducesResponseType(400)]
+    [ProducesResponseType(410)]
+    [ProducesResponseType(200)]
+    public async Task<IActionResult> GetTopics(
+        [FromRoute] Guid forumId,
+        [FromQuery] int skip,
+        [FromQuery] int take,
+        [FromServices] IGetTopicsUseCase useCase,
+        CancellationToken cancellationToken)
+    {
+        var query = new GetTopicsQuery(forumId, skip, take);
+        var (resources, totalCount) = await useCase.Execute(query, cancellationToken);
+        return Ok(new { resources = resources.Select(r => new Topic
+        {
+            Id = r.Id,
+            Title = r.Title,
+            CreatedAt = r.CreatedAt,
+        }), totalCount });
     }
 }

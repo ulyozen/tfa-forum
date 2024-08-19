@@ -2,7 +2,7 @@ using TFA.Domain.Models;
 
 namespace TFA.Domain.UseCases.GetForums;
 
-public interface IGetForumStorage
+public interface IGetForumsStorage
 {
     Task<IEnumerable<Forum>> GetForums(CancellationToken cancellationToken);
 }
