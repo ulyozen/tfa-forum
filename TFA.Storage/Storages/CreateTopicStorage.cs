@@ -15,11 +15,6 @@ internal class CreateTopicStorage : ICreateTopicStorage
         _momentProvider = momentProvider;
         _forumDbContext = forumDbContext;
     }
-    
-    public Task<bool> ForumExist(Guid forumId, CancellationToken cancellationToken)
-    {
-        return _forumDbContext.Forums.AnyAsync(f => f.ForumId == forumId, cancellationToken);
-    }
 
     public async Task<Domain.Models.Topic> CreateTopic(Guid forumId, Guid userId, string title, CancellationToken cancellationToken)
     {
@@ -44,7 +39,7 @@ internal class CreateTopicStorage : ICreateTopicStorage
                 ForumId = t.ForumId,
                 UserId = t.UserId,
                 Title = t.Title,
-                CreateAt = t.CreatedAt
+                CreatedAt = t.CreatedAt
             })
             .FirstAsync(cancellationToken);
     }

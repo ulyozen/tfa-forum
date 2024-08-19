@@ -4,9 +4,9 @@ namespace TFA.Domain.UseCases.GetForums;
 
 internal class GetForumUseCase : IGetForumUseCase
 {
-    private readonly IGetForumStorage _storage;
+    private readonly IGetForumsStorage _storage;
 
-    public GetForumUseCase(IGetForumStorage storage)
+    public GetForumUseCase(IGetForumsStorage storage)
     {
         _storage = storage;
     }

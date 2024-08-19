@@ -10,5 +10,5 @@ public class Topic
 
     public string Title { get; set; } = string.Empty;
     
-    public DateTimeOffset CreateAt { get; set; }
+    public DateTimeOffset CreatedAt { get; set; }
 }
