@@ -1,3 +1,5 @@
+using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using TFA.Domain.UseCases.GetForums;
@@ -8,11 +10,13 @@ internal class GetForumsStorage : IGetForumsStorage
 {
     private readonly IMemoryCache _memoryCache;
     private readonly ForumDbContext _forumDbContext;
+    private readonly IMapper _mapper;
 
-    public GetForumsStorage(IMemoryCache memoryCache, ForumDbContext forumDbContext)
+    public GetForumsStorage(IMemoryCache memoryCache, ForumDbContext forumDbContext, IMapper mapper)
     {
         _memoryCache = memoryCache;
         _forumDbContext = forumDbContext;
+        _mapper = mapper;
     }
 
     public async Task<IEnumerable<Domain.Models.Forum>> GetForums(CancellationToken cancellationToken) =>
@@ -22,11 +26,7 @@ internal class GetForumsStorage : IGetForumsStorage
             {
                 entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromSeconds(10);
                 return _forumDbContext.Forums
-                    .Select(f => new Domain.Models.Forum
-                    {
-                        Id = f.ForumId,
-                        Title = f.Title
-                    })
+                    .ProjectTo<Domain.Models.Forum>(_mapper.ConfigurationProvider)
                     .ToArrayAsync(cancellationToken);
             }) ?? Array.Empty<Domain.Models.Forum>();
 
